@@ -10,8 +10,7 @@ evens = [f for f in [rs for rs in listdir('datafiles')]
 print evens
 print
 
-pairs = [(f1, f2) for f1 in [rs for rs in listdir('datafiles')]
-            for f2 in [rs for rs in listdir('datafiles')] 
+pairs = [(f1, f2) for f1 in [rs for rs in listdir('datafiles')] for f2 in [rs for rs in listdir('datafiles')] 
             if (int(f1.split('.')[1]) + int(f2.split('.')[1]))% 100 == 0]
 print pairs
 print

@@ -54,6 +54,7 @@ def evaluate_guess(guess_pattern, correct_pattern):
     # returns a sequence of pegs indicating correctness of the guess.
     mutable_pattern = deepcopy(correct_pattern)
     correctness = []
+    print "TODO fix"
     for i in range(len(correct_pattern)):
         if guess_pattern[i] == correct_pattern[i] and guess_pattern[i] in mutable_pattern:
             correctness.append('b')

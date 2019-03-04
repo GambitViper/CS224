@@ -8,6 +8,7 @@
 # Author: Zachary Baklund 
 # Date: March 13, 2019 
 #
+from copy import deepcopy
 from random import randrange
 
 colors = ['B', 'W', 'R', 'G', 'P', 'O']
@@ -16,7 +17,7 @@ correct_pattern = []
 
 def create_new_game():
     # returns a valid game pattern.
-    return [colors[randrange(0,len(colors))] for r in range(len(colors))]
+    return [colors[randrange(0,len(colors))] for r in range(4)]
 
 def check_valid(inp):
     for c in colors:
@@ -42,29 +43,52 @@ def get_guess():
     return guess_pattern
 
 
-def evaluate_guess(guess_pattern):
+def evaluate_guess(guess_pattern, correct_pattern):
     # returns a sequence of pegs indicating correctness of the guess.
+    mutable_pattern = deepcopy(correct_pattern)
     correctness = []
     for i in range(len(correct_pattern)):
-        if guess_pattern[i] in correct_pattern:
-            if guess_pattern[i] == correct_pattern[i]:
-                correctness.append('b')
-            else:
-                correctness.append('w')
+        if guess_pattern[i] == correct_pattern[i] and guess_pattern[i] in mutable_pattern:
+            correctness.append('b')
+        elif guess_pattern[i] in mutable_pattern:
+            mutable_pattern.remove(guess_pattern[i])
+            correctness.append('w')
     return correctness
 
+def pre_print(arr):
+    preprint = ""
+    for a in arr:
+        preprint = preprint + " " + a
+    preprint = preprint + " "
+    return preprint
 
 def print_board(game_board):
     # prints the board display
-    print "notimplemented"
+    print("\n~~~~~~~~~~~~~~~~~~~~~~~~")
+    for turn in game_board:
+        print("|{:<8s} : {:^10s}|".format(
+            pre_print(turn[0]), pre_print(turn[1])
+        ))
+    print("~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
 def begin_game():
     print("Welcome to MasterMind!\n")
     correct_pattern = create_new_game()
     print("Start by guessing from these colors:\n{0}\n".format(colors))
-    guess_pattern = get_guess()
-    print("Your guess was: {0}".format(guess_pattern))
-    pegs = evaluate_guess(guess_pattern)
-    board.append()
+    count = 0
+    won = False
+    while count < 10 or not won:
+        guess_pattern = get_guess()
+        pegs = evaluate_guess(guess_pattern, correct_pattern)
+        addtoboard = []
+        addtoboard.append(guess_pattern)
+        addtoboard.append(pegs)
+        print("Debug: cor> {}\nDebug: {} + {}:\n{}".format(correct_pattern, guess_pattern, pegs, addtoboard))
+        board.append(addtoboard)
+        print_board(board)
 
-begin_game()
+def main():
+    begin_game()
+
+if __name__ == '__main__':
+    main()

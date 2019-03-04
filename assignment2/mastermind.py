@@ -54,13 +54,13 @@ def evaluate_guess(guess_pattern, correct_pattern):
     # returns a sequence of pegs indicating correctness of the guess.
     mutable_pattern = deepcopy(correct_pattern)
     correctness = []
-    print "TODO fix"
     for i in range(len(correct_pattern)):
-        if guess_pattern[i] == correct_pattern[i] and guess_pattern[i] in mutable_pattern:
+        if guess_pattern[i] == mutable_pattern[i]:
             correctness.append('b')
+            mutable_pattern[i] = None
         elif guess_pattern[i] in mutable_pattern:
-            mutable_pattern.remove(guess_pattern[i])
             correctness.append('w')
+            mutable_pattern[mutable_pattern.index(guess_pattern[i])] = None
     return correctness
 
 def print_board(game_board):
@@ -74,7 +74,7 @@ def print_board(game_board):
 
 def begin_game():
     print("Welcome to MasterMind!\n")
-    correct_pattern = create_new_game()
+    correct_pattern = ['R', 'R', 'R', 'O'] #create_new_game()
     print("Start by guessing from these colors:")
     count = 0
     won = False

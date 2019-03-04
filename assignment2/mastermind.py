@@ -25,11 +25,18 @@ def check_valid(inp):
             return False
     return True
 
+def pre_print(arr):
+    preprint = ""
+    for a in arr:
+        preprint = preprint + " " + a
+    preprint = preprint + " "
+    return preprint
+
 def get_guess():
     # returns a valid game pattern, indicating the user's guess.
     not_valid = True
     guess_pattern = []
-
+    print(pre_print(colors))
     for i in range(4):
         inp = 0
         while not_valid:
@@ -55,13 +62,6 @@ def evaluate_guess(guess_pattern, correct_pattern):
             correctness.append('w')
     return correctness
 
-def pre_print(arr):
-    preprint = ""
-    for a in arr:
-        preprint = preprint + " " + a
-    preprint = preprint + " "
-    return preprint
-
 def print_board(game_board):
     # prints the board display
     print("\n~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -74,7 +74,7 @@ def print_board(game_board):
 def begin_game():
     print("Welcome to MasterMind!\n")
     correct_pattern = create_new_game()
-    print("Start by guessing from these colors:\n{0}\n".format(colors))
+    print("Start by guessing from these colors:")
     count = 0
     won = False
     while count < 10 or not won:

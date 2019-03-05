@@ -93,33 +93,43 @@ def computer_guess(computer_patterns):
 
 def begin_game(cpu = False):
     print("Welcome to MasterMind!\n")
+
     board = []
     correct_pattern = create_new_game()
     if cpu:
         computer_guesses = init_patterns()
         previous_guess = []
+
     print("Start by guessing from these colors:")
+
     count = 0
     won = False
     while not won:
         guess_pattern = []
+
         if cpu:
             guess_pattern = computer_guess(computer_guesses)
             previous_guess = guess_pattern
         else:
             guess_pattern = get_guess()
+
         pegs = evaluate_guess(guess_pattern, correct_pattern)
+
         if cpu:
             computer_guesses = filter(lambda g: evaluate_guess(previous_guess, g) == pegs, computer_guesses)
+            
         addtoboard = []
         addtoboard.append(guess_pattern)
         addtoboard.append(pegs)
         # print("Debug: cor> {}\nDebug: {} + {}:\n{}".format(correct_pattern, guess_pattern, pegs, addtoboard))
         board.append(addtoboard)
         print_board(board)
+
         if guess_pattern == correct_pattern:
             won = True
             print("!-- You Won --!")
+        elif cpu:
+            print("...> I think there are {} possibilities left".format(len(computer_guesses)))
 
 def main():
     begin_game(True)

@@ -84,19 +84,12 @@ def init_patterns():
     return [[colors[a], colors[b], colors[c], colors[d]]
             for a in range(6) for b in range(6) for c in range(6) for d in range(6)]
 
-def computer_guess(computer_patterns, all_possible_patterns):
+def computer_guess(computer_patterns):
     if len(computer_patterns) == 1296:
         return computer_patterns.pop(computer_patterns.index(['B','B','W','W']))
     else:
-        # return minMax(computer_patterns, all_possible_patterns)
         selection = choice(computer_patterns)
         return computer_patterns.pop(computer_patterns.index(selection))
-
-def cull_patterns(computer_patterns, pegs, previous_guess):
-    return filter(lambda g: evaluate_guess(previous_guess, g) == pegs, computer_patterns)
-    # for pattern in computer_patterns:
-    #     if evaluate_guess(previous_guess, pattern) != pegs:
-    #         computer_patterns.remove(pattern)
 
 def begin_game(cpu = False):
     print("Welcome to MasterMind!\n")
@@ -111,13 +104,13 @@ def begin_game(cpu = False):
     while not won:
         guess_pattern = []
         if cpu:
-            guess_pattern = computer_guess(computer_guesses, all_possible_patterns)
+            guess_pattern = computer_guess(computer_guesses)
             previous_guess = guess_pattern
         else:
             guess_pattern = get_guess()
         pegs = evaluate_guess(guess_pattern, correct_pattern)
         if cpu:
-            computer_guesses = cull_patterns(computer_guesses, pegs, previous_guess)
+            computer_guesses = filter(lambda g: evaluate_guess(previous_guess, g) == pegs, computer_guesses)
         addtoboard = []
         addtoboard.append(guess_pattern)
         addtoboard.append(pegs)

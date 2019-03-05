@@ -12,12 +12,10 @@ from copy import deepcopy
 from random import randrange
 
 colors = ['B', 'W', 'R', 'G', 'P', 'O']
-board = []
-correct_pattern = []
 
 def create_new_game():
     # returns a valid game pattern.
-    return [colors[randrange(0,len(colors))] for r in range(4)]
+    return [colors[randrange(0,len(colors))] for _ in range(4)]
 
 def check_valid(inp):
     for c in colors:
@@ -25,18 +23,18 @@ def check_valid(inp):
             return False
     return True
 
-def pre_print(arr):
-    preprint = ""
+def board_format(arr):
+    bformat = ""
     for a in arr:
-        preprint = preprint + " " + a
-    preprint = preprint + " "
-    return preprint
+        bformat += " " + a
+    bformat += " "
+    return bformat
 
 def get_guess():
     # returns a valid game pattern, indicating the user's guess.
     not_valid = True
     guess_pattern = []
-    print(pre_print(colors))
+    print("Colors :> {}".format(board_format(colors)))
     for i in range(4):
         inp = 0
         while not_valid:
@@ -77,12 +75,13 @@ def print_board(game_board):
     print("\n~~~~~~~~~~~~~~~~~~~~~~~~")
     for turn in game_board:
         print("|{:<8s} : {:^10s}|".format(
-            pre_print(turn[0]), pre_print(turn[1])
+            board_format(turn[0]), board_format(turn[1])
         ))
     print("~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
 def begin_game():
     print("Welcome to MasterMind!\n")
+    board = []
     correct_pattern = create_new_game()
     print("Start by guessing from these colors:")
     count = 0
@@ -93,7 +92,7 @@ def begin_game():
         addtoboard = []
         addtoboard.append(guess_pattern)
         addtoboard.append(pegs)
-        print("Debug: cor> {}\nDebug: {} + {}:\n{}".format(correct_pattern, guess_pattern, pegs, addtoboard))
+        # print("Debug: cor> {}\nDebug: {} + {}:\n{}".format(correct_pattern, guess_pattern, pegs, addtoboard))
         board.append(addtoboard)
         print_board(board)
         if guess_pattern == correct_pattern:

@@ -9,7 +9,7 @@
 # Date: March 13, 2019 
 #
 from copy import deepcopy
-from random import randrange
+from random import randrange, choice
 
 colors = ['B', 'W', 'R', 'G', 'P', 'O']
 
@@ -79,16 +79,42 @@ def print_board(game_board):
         ))
     print("~~~~~~~~~~~~~~~~~~~~~~~~\n")
 
-def begin_game():
+def init_patterns():
+    return [[colors[a], colors[b], colors[c], colors[d]]
+            for a in range(6) for b in range(6) for c in range(6) for d in range(6)]
+
+def computer_guess(computer_patterns):
+    if len(computer_patterns) == 1296:
+        return computer_patterns.pop(computer_patterns.index(['B','B','W','W']))
+    else:
+        selection = choice(computer_patterns)
+        return computer_patterns.pop(computer_patterns.index(selection))
+
+def cull_patterns(computer_patterns, pegs, previous_guess):
+    for pattern in computer_patterns:
+        if evaluate_guess(previous_guess, pattern) != pegs:
+            computer_patterns.remove(pattern)
+
+def begin_game(cpu = False):
     print("Welcome to MasterMind!\n")
     board = []
     correct_pattern = create_new_game()
+    if cpu:
+        computer_guesses = init_patterns()
+        previous_guess = []
     print("Start by guessing from these colors:")
     count = 0
     won = False
-    while count < 7 and not won:
-        guess_pattern = get_guess()
+    while not won:
+        guess_pattern = []
+        if cpu:
+            guess_pattern = computer_guess(computer_guesses)
+            previous_guess = guess_pattern
+        else:
+            guess_pattern = get_guess()
         pegs = evaluate_guess(guess_pattern, correct_pattern)
+        if cpu:
+            cull_patterns(computer_guesses, pegs, previous_guess)
         addtoboard = []
         addtoboard.append(guess_pattern)
         addtoboard.append(pegs)

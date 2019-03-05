@@ -8,6 +8,7 @@
 # Author: Zachary Baklund 
 # Date: March 13, 2019 
 #
+from sys import maxint
 from copy import deepcopy
 from random import randrange, choice
 
@@ -83,12 +84,34 @@ def init_patterns():
     return [[colors[a], colors[b], colors[c], colors[d]]
             for a in range(6) for b in range(6) for c in range(6) for d in range(6)]
 
-def computer_guess(computer_patterns):
+def minMax(computer_patterns, all_possible_patterns):
+    peg_outcomes = [[],['w'],['w','w'],['w','w','w'],['w','w','w','w'],
+                    ['b'],['b','w'],['b','w','w'],['b','w','w','w'],
+                    ['b','b'],['b','b','w'],['b','b','w','w'],
+                    ['b','b','b'],['b','b','b','b']]
+    cpumin = maxint
+    best_pattern = None
+    for guess in computer_patterns:
+        cpumax = 0
+        for pegs in peg_outcomes:
+            count = 0
+            for cpusolution in all_possible_patterns:
+                if evaluate_guess(guess, cpusolution) == pegs:
+                    count += 1
+            if count > cpumax:
+                cpumax = count
+        if cpumax < cpumin:
+            cpumin = cpumax
+            best_pattern = guess
+    return best_pattern
+
+def computer_guess(computer_patterns, all_possible_patterns):
     if len(computer_patterns) == 1296:
         return computer_patterns.pop(computer_patterns.index(['B','B','W','W']))
     else:
-        selection = choice(computer_patterns)
-        return computer_patterns.pop(computer_patterns.index(selection))
+        return minMax(computer_patterns, all_possible_patterns)
+        # selection = choice(computer_patterns)
+        # return computer_patterns.pop(computer_patterns.index(selection))
 
 def cull_patterns(computer_patterns, pegs, previous_guess):
     for pattern in computer_patterns:
@@ -100,6 +123,7 @@ def begin_game(cpu = False):
     board = []
     correct_pattern = create_new_game()
     if cpu:
+        all_possible_patterns = init_patterns()
         computer_guesses = init_patterns()
         previous_guess = []
     print("Start by guessing from these colors:")
@@ -108,7 +132,7 @@ def begin_game(cpu = False):
     while not won:
         guess_pattern = []
         if cpu:
-            guess_pattern = computer_guess(computer_guesses)
+            guess_pattern = computer_guess(computer_guesses, all_possible_patterns)
             previous_guess = guess_pattern
         else:
             guess_pattern = get_guess()
@@ -126,7 +150,7 @@ def begin_game(cpu = False):
             print("!-- You Won --!")
 
 def main():
-    begin_game()
+    begin_game(True)
 
 if __name__ == '__main__':
     main()

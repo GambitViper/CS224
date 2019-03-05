@@ -8,8 +8,7 @@
 # Author: Zachary Baklund 
 # Date: March 13, 2019 
 #
-from sys import maxint
-from copy import deepcopy
+
 from random import randrange, choice
 
 colors = ['B', 'W', 'R', 'G', 'P', 'O']

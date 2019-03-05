@@ -85,6 +85,15 @@ def init_patterns():
             for a in range(6) for b in range(6) for c in range(6) for d in range(6)]
 
 def minMax(computer_patterns, all_possible_patterns):
+    # Apply minimax technique to find a next guess as follows: For each possible guess, that is, 
+    # any unused code of the 1296 not just those in S, calculate how many possibilities in S would be eliminated 
+    # for each possible colored/white peg score. The score of a guess is the minimum number of possibilities 
+    # it might eliminate from S. A single pass through S for each unused code of the 1296 will provide a hit count 
+    # for each colored/white peg score found; the colored/white peg score with the highest hit count will 
+    # eliminate the fewest possibilities; calculate the score of a guess by 
+    # using "minimum eliminated" = "count of elements in S" - (minus) "highest hit count". 
+    # From the set of guesses with the maximum score, select one as the next guess, 
+    # choosing a member of S whenever possible.
     peg_outcomes = [[],['w'],['w','w'],['w','w','w'],['w','w','w','w'],
                     ['b'],['b','w'],['b','w','w'],['b','w','w','w'],
                     ['b','b'],['b','b','w'],['b','b','w','w'],

@@ -84,55 +84,25 @@ def init_patterns():
     return [[colors[a], colors[b], colors[c], colors[d]]
             for a in range(6) for b in range(6) for c in range(6) for d in range(6)]
 
-def minMax(computer_patterns, all_possible_patterns):
-    # Apply minimax technique to find a next guess as follows: For each possible guess, that is, 
-    # any unused code of the 1296 not just those in S, calculate how many possibilities in S would be eliminated 
-    # for each possible colored/white peg score. The score of a guess is the minimum number of possibilities 
-    # it might eliminate from S. A single pass through S for each unused code of the 1296 will provide a hit count 
-    # for each colored/white peg score found; the colored/white peg score with the highest hit count will 
-    # eliminate the fewest possibilities; calculate the score of a guess by 
-    # using "minimum eliminated" = "count of elements in S" - (minus) "highest hit count". 
-    # From the set of guesses with the maximum score, select one as the next guess, 
-    # choosing a member of S whenever possible.
-    peg_outcomes = [[],['w'],['w','w'],['w','w','w'],['w','w','w','w'],
-                    ['b'],['b','w'],['b','w','w'],['b','w','w','w'],
-                    ['b','b'],['b','b','w'],['b','b','w','w'],
-                    ['b','b','b'],['b','b','b','b']]
-    cpumin = maxint
-    best_pattern = None
-    for guess in computer_patterns:
-        cpumax = 0
-        for pegs in peg_outcomes:
-            count = 0
-            for cpusolution in all_possible_patterns:
-                if evaluate_guess(guess, cpusolution) == pegs:
-                    count += 1
-            if count > cpumax:
-                cpumax = count
-        if cpumax < cpumin:
-            cpumin = cpumax
-            best_pattern = guess
-    return best_pattern
-
 def computer_guess(computer_patterns, all_possible_patterns):
     if len(computer_patterns) == 1296:
         return computer_patterns.pop(computer_patterns.index(['B','B','W','W']))
     else:
-        return minMax(computer_patterns, all_possible_patterns)
-        # selection = choice(computer_patterns)
-        # return computer_patterns.pop(computer_patterns.index(selection))
+        # return minMax(computer_patterns, all_possible_patterns)
+        selection = choice(computer_patterns)
+        return computer_patterns.pop(computer_patterns.index(selection))
 
 def cull_patterns(computer_patterns, pegs, previous_guess):
-    for pattern in computer_patterns:
-        if evaluate_guess(previous_guess, pattern) != pegs:
-            computer_patterns.remove(pattern)
+    return filter(lambda g: evaluate_guess(previous_guess, g) == pegs, computer_patterns)
+    # for pattern in computer_patterns:
+    #     if evaluate_guess(previous_guess, pattern) != pegs:
+    #         computer_patterns.remove(pattern)
 
 def begin_game(cpu = False):
     print("Welcome to MasterMind!\n")
     board = []
     correct_pattern = create_new_game()
     if cpu:
-        all_possible_patterns = init_patterns()
         computer_guesses = init_patterns()
         previous_guess = []
     print("Start by guessing from these colors:")
@@ -147,7 +117,7 @@ def begin_game(cpu = False):
             guess_pattern = get_guess()
         pegs = evaluate_guess(guess_pattern, correct_pattern)
         if cpu:
-            cull_patterns(computer_guesses, pegs, previous_guess)
+            computer_guesses = cull_patterns(computer_guesses, pegs, previous_guess)
         addtoboard = []
         addtoboard.append(guess_pattern)
         addtoboard.append(pegs)

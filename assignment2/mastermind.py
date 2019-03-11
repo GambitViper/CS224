@@ -8,7 +8,7 @@
 # Author: Zachary Baklund 
 # Date: March 13, 2019 
 #
-
+import sys
 from random import randrange, choice
 
 colors = ['B', 'W', 'R', 'G', 'P', 'O']
@@ -90,7 +90,7 @@ def computer_guess(computer_patterns):
         selection = choice(computer_patterns)
         return computer_patterns.pop(computer_patterns.index(selection))
 
-def begin_game(cpu = False):
+def begin_game(cpu = False, debug = False):
     print("Welcome to MasterMind!\n")
 
     board = []
@@ -120,7 +120,11 @@ def begin_game(cpu = False):
         addtoboard = []
         addtoboard.append(guess_pattern)
         addtoboard.append(pegs)
-        # print("Debug: cor> {}\nDebug: {} + {}:\n{}".format(correct_pattern, guess_pattern, pegs, addtoboard))
+        if debug:
+            print("\n*****")
+            print("Debug Correct:{}".format(board_format(correct_pattern)))
+            print("Guess:{}-- Pegs:{}\n*****".format(board_format(guess_pattern), board_format(pegs)))
+
         board.append(addtoboard)
         print_board(board)
 
@@ -131,7 +135,13 @@ def begin_game(cpu = False):
             print("...> I think there are {} possibilities left".format(len(computer_guesses)))
 
 def main():
-    begin_game(True)
+    cpu, debug = False, False
+    for arg in sys.argv:
+        if arg == 'cpu':
+            cpu = True
+        if arg == 'debug':
+            debug = True
+    begin_game(cpu, debug)
 
 if __name__ == '__main__':
     main()

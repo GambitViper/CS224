@@ -4,6 +4,12 @@ For this assignment, you will write a Python version of the Mastermind game. Mas
 
 ## Running the program
 
+```
+python mastermind.py debug cpu
+```
+* (debug) is an optional command-line argument -- When present this turns on a debug print that shows the correct pattern and intermediary memory allocation for the guess and the pegs associated with that guess according to the secret pattern
+* (cpu) is an optional command-line argument -- When present this optional argument invokes the function definitions that solve the mastermind problem stochastically by removing possible patterns from a total patterns list and then picking randomly from the remaining possibilities
+
 ## Author
 
 * Author: **Zachary Baklund**

@@ -49,26 +49,26 @@ def get_guess():
 
 
 def evaluate_guess(guess_pattern, correct_pattern):
-    # returns a sequence of pegs indicating correctness of the guess.
-    remaining_pattern = []
-    remaining_guess = []
-    correctness = []
+    # returns a sequence of pegs indicating pegs of the guess.
+    pattern_leftover = []
+    guess_leftover = []
+    pegs = []
 
     # Check for correct color and correct place
     for i, guess in enumerate(guess_pattern):
         if guess == correct_pattern[i]:
-            correctness.append('b')
+            pegs.append('b')
         else:
-            remaining_guess.append(guess)
-            remaining_pattern.append(correct_pattern[i])
+            guess_leftover.append(guess)
+            pattern_leftover.append(correct_pattern[i])
 
     # Check for correct color incorrect place
-    for guess in remaining_guess:
-        if guess in remaining_pattern:
-            correctness.append('w')
-            remaining_pattern.remove(guess)
+    for guess in guess_leftover:
+        if guess in pattern_leftover:
+            pegs.append('w')
+            pattern_leftover.remove(guess)
 
-    return correctness
+    return pegs
 
 def print_board(game_board):
     # prints the board display

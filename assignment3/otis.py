@@ -7,7 +7,7 @@
 # Author: Zachary Baklund
 # Date: April 22, 2019
 #
-
+from time import sleep
 from building import Building
 from passenger import Passenger
 from elevator import Elevator
@@ -74,12 +74,13 @@ def main():
 
     elevator_complete = False
     while(not elevator_complete):
+        sleep(1)
         passengers_on_floor = find_passengers_on_floor(passenger_list, elevator.curr_floor)
         board_passengers_to_elevator(passengers_on_floor, elevator)
         b.run()
         dispatch_passengers_to_floor(elevator)
-        elevator_complete = check_patrons(passenger_list)
         b.output()
+        elevator_complete = check_patrons(passenger_list)
 
 if __name__ == "__main__":
     main()

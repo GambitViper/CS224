@@ -15,17 +15,23 @@ class Elevator(object):
 
     # move(self) Method to move the elevator one floor
     def move(self):
-        if self.direction == "U" and not (self.curr_floor + 1) > num_floors:
+        if self.direction == "U" and not (self.curr_floor + 1) > self.num_floors:
             self.curr_floor += 1
         elif self.direction == "D" and not (self.curr_floor - 1) < 1:
             self.curr_floor -= 1
         else:
-            print("Error elevator has left the building!")
+            if self.direction == "U":
+                self.direction = "D"
+            else:
+                self.direction = "U"
     
     # reg pass(self, passenger) Passenger enters elevator
     def passenger_enter(self, passenger):
-        self.register_list.append(passenger.pid)
+        passenger.in_elevator = True
+        self.register_list.append(passenger)
 
     # exit pass(self, passenger) Passenger exits elevator
     def passenger_exit(self, passenger):
-        self.register_list.remove(passenger.pid)
+        passenger.in_elevator = False
+        passenger.done = True
+        self.register_list.remove(passenger)

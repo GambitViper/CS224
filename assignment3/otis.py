@@ -41,6 +41,28 @@ def get_passengers(num_floors):
         passenger_list.append(Passenger(i, num_floors))
     return passenger_list
 
+def check_patrons(passenger_list):
+    for p in passenger_list:
+        if p.done == False:
+            return False
+    return True
+
+def find_passengers_on_floor(passenger_list, floor):
+    passengers_on_floor = []
+    for p in passenger_list:
+        if p.src_floor == floor and not p.done and not p.in_elevator:
+            passengers_on_floor.append(p)
+    return passengers_on_floor
+
+def board_passengers_to_elevator(passengers, elevator):
+    for p in passengers:
+        if p.direction == elevator.direction:
+            elevator.passenger_enter(p)
+
+def dispatch_passengers_to_floor(elevator):
+    for p in elevator.register_list:
+        if p.dest_floor == elevator.curr_floor:
+            elevator.passenger_exit(p)
 
 def main():
     num_floors = get_floors()
@@ -48,8 +70,16 @@ def main():
     elevator = Elevator(num_floors)
 
     b = Building(num_floors, passenger_list, elevator)
-
     b.output()
+
+    elevator_complete = False
+    while(not elevator_complete):
+        passengers_on_floor = find_passengers_on_floor(passenger_list, elevator.curr_floor)
+        board_passengers_to_elevator(passengers_on_floor, elevator)
+        b.run()
+        dispatch_passengers_to_floor(elevator)
+        elevator_complete = check_patrons(passenger_list)
+        b.output()
 
 if __name__ == "__main__":
     main()

@@ -7,7 +7,8 @@
 # Author: Zachary Baklund
 # Date: April 22, 2019
 #
-from time import sleep
+import sys
+from time import sleep, time
 from building import Building
 from passenger import Passenger
 from elevator import Elevator
@@ -64,23 +65,52 @@ def dispatch_passengers_to_floor(elevator):
         if p.dest_floor == elevator.curr_floor:
             elevator.passenger_exit(p)
 
+def change_direction_check(passenger_list, elevator, num_floors):
+    if elevator.direction == "U" and not (elevator.curr_floor + 1) > num_floors:
+        for p in passenger_list:
+            if p.src_floor >= elevator.curr_floor and not p.in_elevator and not p.done:
+                return "U"
+        return "D" if not elevator.register_list else "U"
+    elif elevator.direction == "D" and not (elevator.curr_floor - 1) < 1:
+        for p in passenger_list:
+            if p.src_floor <= elevator.curr_floor and not p.in_elevator and not p.done:
+                return "D"
+        return "U" if not elevator.register_list else "D"
+    else:
+        return elevator.direction
+
+
 def main():
+    start_time = time()
+    moves = 0
+    noout = True
+    if (len(sys.argv) > 1 and sys.argv[1] == "fast") or (len(sys.argv) > 2 and sys.argv[2] == "fast"):
+        noout = False
+        
     num_floors = get_floors()
     passenger_list = get_passengers(num_floors)
     elevator = Elevator(num_floors)
 
     b = Building(num_floors, passenger_list, elevator)
-    b.output()
+
+    if noout:
+        b.output()
 
     elevator_complete = False
     while(not elevator_complete):
-        sleep(1)
+        if noout:
+            sleep(.25)
         passengers_on_floor = find_passengers_on_floor(passenger_list, elevator.curr_floor)
         board_passengers_to_elevator(passengers_on_floor, elevator)
-        b.run()
         dispatch_passengers_to_floor(elevator)
-        b.output()
+        if len(sys.argv) > 1 and sys.argv[1] == "mine":
+            elevator.direction = change_direction_check(passenger_list, elevator, num_floors)
+        b.run()
+        if noout:
+            b.output()
+        moves += 1
         elevator_complete = check_patrons(passenger_list)
+    print("{} moves in {} seconds".format(moves, time() - start_time))
 
 if __name__ == "__main__":
     main()
